@@ -1,6 +1,9 @@
 #include "Renderer.h"
 #include "Vector2.h"
 #include "Input.h"
+#include "Particles.h"
+#include "Random.h"
+#include "ETime.h"
 
 #include <SDL.h>
 #include <iostream>
@@ -15,21 +18,23 @@ int main(int argc, char* argv[])
 	Input input;
 	input.Initialize();
 
+	Time time;
 
-	Vector2 v1{ 400, 300 };
-	Vector2 v2{ 600, 100 };
+	std::vector<Particle> particles;
+	/*for (int i = 0; i < 10000; i++) {
+		particles.push_back(Particle{ {rand() % 800, rand() % 800} , { randomf(100,300), 0.0f } } );
+
+	}*/
+
 
 	std::vector<Vector2> points;
-	/*for (int i = 0; i < 100; i++) {
-		points.push_back(Vector2{ rand() % 800, rand() % 600 });
-	}*/
+	
 	bool quit = false;
 	while (!quit)
 	{
-		/*Vector2 speed{ 0.1f, -0.1f };
-		for (Vector2& point : points) {
-			point = point + speed;
-		}*/
+		time.Tick();
+		std::cout << time.GetTime() << std::endl;
+
 		input.Update();
 
 		if (input.GetKeyDown(SDL_SCANCODE_ESCAPE)) {
@@ -37,7 +42,20 @@ int main(int argc, char* argv[])
 		}
 
 		Vector2 mousePosition = input.GetMousePosition();
-		std::cout << mousePosition.x <<  " " << mousePosition.y << std::endl;
+		if (input.GetMouseButtonDown(0)) {
+			particles.push_back(Particle{ mousePosition, { randomf(-100,100), randomf(-100,100) } , {randomf(1, 5)}});
+		}
+
+		for (Particle& particle : particles) {
+			particle.Update(time.GetDeltaTime());
+			if (particle.position.x > 800) {
+				particle.position.x = 0;
+			}
+			if (particle.lifespan != 0) {
+				particle.lifespan -= time.GetDeltaTime();
+			}
+		}
+		
 
 		if (input.GetMouseButtonDown(0) && !input.GetPrevMouseButtonDown(0)) {
 			std::cout << "mouse pressed" << std::endl;
@@ -56,23 +74,21 @@ int main(int argc, char* argv[])
 		renderer.BeginFrame();
 		//	SDL_RenderClear(renderer);
 
+		renderer.SetColor(255, 255, 255, 0);
+		for (Particle particle : particles) {
+			if (particle.lifespan >= 0) {
+				particle.Draw(renderer);
+			}
+		}
 		//	// draw line
-		renderer.SetColor(255,255,255,0);
-		renderer.DrawLine(300, 400, 400, 300);
-		renderer.DrawLine(400, 300, 500, 400);
-		renderer.DrawLine(500, 400, 300, 400);
-		renderer.DrawLine(v1.x, v1.y, v2.x, v2.y);
+		
 
-		for (int i = 0; points.size() >  1 && i < points.size() - 1; i++) {
+		/*for (int i = 0; points.size() >  1 && i < points.size() - 1; i++) {
 			renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 0);
 			renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
-		}
-
-		/*for (int i = 0; i < 200; i++) {
-			renderer.DrawLine(rand() % 300, rand() % 200, rand() % 800, rand() % 600);
-			renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 0);
-			renderer.DrawPoint(rand() % 400, rand() % 300);
 		}*/
+
+		
 
 		renderer.EndFrame();
 	}
