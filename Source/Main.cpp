@@ -5,6 +5,7 @@
 #include "Random.h"
 #include "ETime.h"
 #include "MathUtils.h"
+#include "Model.h"
 
 #include <SDL.h>
 #include <iostream>
@@ -38,12 +39,41 @@ int main(int argc, char* argv[])
 	}*/
 
 
-	std::vector<Vector2> points;
 
 	FMOD::Sound* sound = nullptr;
-	audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
+	
 
-	audio->playSound(sound, 0, false, nullptr);
+	std::vector<FMOD::Sound*> sounds;
+	audio->createSound("bass.wav", FMOD_DEFAULT, 0, &sound);
+	sounds.push_back(sound);
+
+	audio->createSound("snare.wav", FMOD_DEFAULT, 0, &sound);
+	sounds.push_back(sound);
+	
+	audio->createSound("open-hat.wav", FMOD_DEFAULT, 0, &sound);
+	sounds.push_back(sound);
+	
+	audio->createSound("close-hat.wav", FMOD_DEFAULT, 0, &sound);
+	sounds.push_back(sound);
+
+	audio->createSound("clap.wav", FMOD_DEFAULT, 0, &sound);
+	sounds.push_back(sound);
+
+	audio->createSound("cowbell.wav", FMOD_DEFAULT, 0, &sound);
+	sounds.push_back(sound);
+
+
+
+	std::vector<Vector2> points;
+	points.push_back(Vector2{ -5, 5 });
+	points.push_back(Vector2{ 0, -5 });
+	points.push_back(Vector2{ 5, 5 });
+	points.push_back(Vector2{ -5, 5 });
+
+	Model model{ points, Color{1,1,1,0} };
+
+	Vector2 position{ 400, 300 };
+	float rotation = 0;
 
 	bool quit = false;
 	while (!quit)
@@ -58,7 +88,36 @@ int main(int argc, char* argv[])
 			quit = true;
 		}
 
-		
+		if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q)){
+			audio->playSound(sounds[0], 0, false, nullptr);
+		}
+
+		if (input.GetKeyDown(SDL_SCANCODE_W) && !input.GetPrevKeyDown(SDL_SCANCODE_W)) {
+			audio->playSound(sounds[1], 0, false, nullptr);
+		}
+
+		if (input.GetKeyDown(SDL_SCANCODE_E) && !input.GetPrevKeyDown(SDL_SCANCODE_E)) {
+			audio->playSound(sounds[2], 0, false, nullptr);
+		}
+
+		if (input.GetKeyDown(SDL_SCANCODE_R) && !input.GetPrevKeyDown(SDL_SCANCODE_R)) {
+			audio->playSound(sounds[3], 0, false, nullptr);
+		}
+
+		if (input.GetKeyDown(SDL_SCANCODE_T) && !input.GetPrevKeyDown(SDL_SCANCODE_T)) {
+			audio->playSound(sounds[4], 0, false, nullptr);
+		}
+		if (input.GetKeyDown(SDL_SCANCODE_Y) && !input.GetPrevKeyDown(SDL_SCANCODE_Y)) {
+			audio->playSound(sounds[5], 0, false, nullptr);
+		}
+		Vector2 velocity{ 0, 0 };
+		if (input.GetKeyDown(SDL_SCANCODE_UP)) velocity.y = -100;
+		if (input.GetKeyDown(SDL_SCANCODE_DOWN)) velocity.y = 100;
+		if (input.GetKeyDown(SDL_SCANCODE_LEFT)) velocity.x = -100;
+		if (input.GetKeyDown(SDL_SCANCODE_RIGHT)) velocity.x = 100;
+
+		position = position + velocity * time.GetDeltaTime();
+		rotation = velocity.Angle();
 
 		Vector2 mousePosition = input.GetMousePosition();
 		if (input.GetMouseButtonDown(0)) {
@@ -104,7 +163,7 @@ int main(int argc, char* argv[])
 			renderer.SetColor(0, 0, 0, 0);
 			renderer.BeginFrame();
 			//	SDL_RenderClear(renderer);
-			renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, rand() % 256);
+			/*renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, rand() % 256);
 			float radius = 30;
 			offset += (90 * time.GetDeltaTime());
 			for (float angle = 0; angle < 360; angle += 360 / 30) {
@@ -112,7 +171,7 @@ int main(int argc, char* argv[])
 				float y = Math::Sin(Math::DegToRad(angle + offset)) * Math::Sin((offset + angle) * 0.1f) * radius;
 
 				renderer.DrawRect(400 + x, 300 + y, randomf(1, 20), randomf(1, 20));
-			}
+			}*/
 
 			
 			for (Particle particle : particles) {
@@ -126,7 +185,8 @@ int main(int argc, char* argv[])
 				renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 0);
 				renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
 			}*/
-
+			renderer.SetColor(255, 255, 255, 0);
+			model.Draw(renderer, position, rotation, 5);
 
 
 			renderer.EndFrame();
