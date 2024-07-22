@@ -4,6 +4,8 @@
 #include "Enemy.h"
 #include "GameData.h"
 #include "MyGame.h"
+#include "Font.h"
+#include "Text.h"
 
 #include <iostream>
 #include <vector>
@@ -21,8 +23,13 @@ int main(int argc, char* argv[])
 		game->Update(g_engine.GetTime().GetDeltaTime());
 		g_engine.GetRenderer().SetColor(0, 0, 0, 0);
 		g_engine.GetRenderer().BeginFrame();
+		Font* font = new Font();
+		font->Load("Begok.ttf", 20);
+		Text* text = new Text(font);
+		text->Create(g_engine.GetRenderer(), "Hello World", Color{ 1, 1, 1, 1 });
 
 		game->Draw(g_engine.GetRenderer());
+		text->Draw(g_engine.GetRenderer(), 40, 40);
 
 		g_engine.GetRenderer().EndFrame();
 	}

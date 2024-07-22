@@ -3,18 +3,24 @@
 #include "Bullet.h"
 #include "Scene.h"
 #include "GameData.h"
+#include "Game.h"
+#include "MyGame.h"
 #include <iostream>
 
 void Player::Update(float dt)
 {
 
-	float thrust = 0;
-	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_UP)) thrust = m_speed;
-	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_DOWN)) thrust = -m_speed;
-	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_LEFT)) m_transform.rotation -= Math::DegToRad(100) * dt;
-	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_RIGHT)) m_transform.rotation += Math::DegToRad(100) * dt;
+	Vector2 direction{ 0,0 };
+	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_W)) direction.x = 1;
+	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_S)) direction.x = -1;
 
-	Vector2 acceleration = Vector2{ thrust, 0.0f }.Rotate(m_transform.rotation) * thrust;
+	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_Q)) direction.x = -1;
+	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_E)) direction.x = 1;
+
+	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_A)) m_transform.rotation -= Math::DegToRad(100) * dt;
+	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_D)) m_transform.rotation += Math::DegToRad(100) * dt;
+
+	Vector2 acceleration = direction.Rotate(m_transform.rotation) * m_speed;
 
 	m_velocity += acceleration * dt;
 
@@ -23,8 +29,11 @@ void Player::Update(float dt)
 
 	m_fireTimer -= dt;
 	if (g_engine.GetInput().GetKeyDown(SDL_SCANCODE_SPACE) && m_fireTimer <=0) {
-		m_fireTimer = 1;
+		m_fireTimer = 0.2f * m_fireModifier;
 		
+		Vector2 direction = g_engine.GetInput().GetMousePosition() - m_transform.position;
+		float angle = direction.Angle();
+
 		// actor
 		Model* model = new Model{ GameData::BulletPoints, Color{ 1, 1, 0 } };
 		Transform transform{ m_transform.position, m_transform.rotation, 1.0f };
@@ -41,5 +50,6 @@ void Player::Update(float dt)
 void Player::OnCollision(Actor* actor){
 	if (actor->GetTag() == "Enemy") {
 		m_destroyed = true;
+		dynamic_cast<MyGame*>(m_scene->GetGame())->OnPlayerDeath();
 	}
 }
