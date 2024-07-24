@@ -12,15 +12,17 @@ bool MyGame::Initialize()
 {
     m_scene = new Scene(this);
 
+	g_engine.GetAudio().Update();
+
 	m_font = new Font();
 	m_font->Load("Begok.ttf", 20);
 	m_largeFont = new Font();
-	m_largeFont->Load("Begok.ttf", 20);
+	m_largeFont->Load("Begok.ttf", 40);
 	
 	m_textScore = new Text(m_font);
 	m_textLives = new Text(m_font);
 
-	m_textTitle = new Text(m_font);
+	m_textTitle = new Text(m_largeFont);
     return true;
 }
 
@@ -40,6 +42,7 @@ void MyGame::Update(float dt)
 	case MyGame::eState::StartGame:
 		m_score = 0;
 		m_lives = 3;
+		g_engine.GetAudio().PlaySound("theme.wav");
 		m_state = eState::StartLevel;
 		break;
 	case MyGame::eState::StartLevel:
@@ -47,10 +50,10 @@ void MyGame::Update(float dt)
 	{
 		Transform transform{ Vector2{400,300}, 0, 3 };
 		Model* model = new Model{ GameData::ShipPoints, Color{1,0,0} };
-		Player* player = new Player(100, transform, model);
+		auto player = std::make_unique<Player>(250.0f, transform, model);
 		player->SetDamping(1.5f);
 		player->SetTag("Player");
-		m_scene->AddActor(player);
+		m_scene->AddActor(std::move(player));
 	}
 	m_spawnTime = 3;
 	m_spawnTimer = m_spawnTime;
@@ -60,17 +63,22 @@ void MyGame::Update(float dt)
 		m_spawnTimer -= dt;
 		if (m_spawnTimer <= 0) {
 			m_spawnTime -= 0.2f;
+			m_spawnTime = Math::Max(0.2f, m_spawnTime);
 			m_spawnTimer = m_spawnTime;
 
 			auto* enemyModel = new Model{ GameData::EnemyPoints, Color{1,0,1} };
-			auto* enemy = new Enemy(400, Transform{ { random(g_engine.GetRenderer().GetWidth()),random(g_engine.GetRenderer().GetHeight())}, 0, 2 }, enemyModel);
+			auto enemy = std::make_unique<Enemy>(400.0f, Transform{ { random(g_engine.GetRenderer().GetWidth()),random(g_engine.GetRenderer().GetHeight())}, 0, 2 }, enemyModel);
 			enemy->SetTag("Enemy");
-			m_scene->AddActor(enemy);
+			m_scene->AddActor(std::move(enemy));
+		}
+		m_pickupTimer -= dt;
+		if (m_pickupTimer <= 0) {
+			m_pickupTimer = 10;
 
-			auto* pickupModel = new Model{ GameData::ShipPoints, Color{1,1,1} };
-			auto* pickup = new Enemy(400, Transform{ { random(g_engine.GetRenderer().GetWidth()),random(g_engine.GetRenderer().GetHeight())}, 0, 2 }, enemyModel);
-			enemy->SetTag("Pickup");
-			m_scene->AddActor(pickup);
+			auto* pickupModel = new Model{ GameData::PickupPoints, Color{1,1,1} };
+			auto pickup = std::make_unique<Pickup>(Transform{ { random(g_engine.GetRenderer().GetWidth()),random(g_engine.GetRenderer().GetHeight())}, 0, 2 }, pickupModel);
+			pickup->SetTag("Pickup");
+			m_scene->AddActor(std::move(pickup));
 		}
 		break;
 	case MyGame::eState::PlayerDead:
@@ -99,20 +107,20 @@ void MyGame::Draw(Renderer& renderer)
 
 			break;
 		case MyGame::eState::GameOver:
-			m_textTitle->Create(renderer, "game gver", Color{ 1,0,0,1 });
+			m_textTitle->Create(renderer, "game over", Color{ 1,0,0,1 });
 			m_textTitle->Draw(renderer, 400, 300);
 			break;
 		default:
 			break;
 	}
 
-	std::string text = "Score: " + std::to_string(m_score);
+	std::string text = "score: " + std::to_string(m_score);
 	m_textScore->Create(renderer, text, { 0,1,0,1 });
 	m_textScore->Draw(renderer, 20, 20);
 
-	std::string livestext = "Lives: " + std::to_string(m_lives);
-	m_textLives->Create(renderer, text, { 0,1,0,1 });
-	m_textLives->Draw(renderer, 20, 20);
+	std::string livestext = "lives: " + std::to_string(m_lives);
+	m_textLives->Create(renderer, livestext, { 0,1,0,1 });
+	m_textLives->Draw(renderer, 20, 40);
 
 
 

@@ -26,13 +26,16 @@ int main(int argc, char* argv[])
 		Font* font = new Font();
 		font->Load("Begok.ttf", 20);
 		Text* text = new Text(font);
-		text->Create(g_engine.GetRenderer(), "Hello World", Color{ 1, 1, 1, 1 });
 
 		game->Draw(g_engine.GetRenderer());
 		text->Draw(g_engine.GetRenderer(), 40, 40);
+		g_engine.GetPS().Draw(g_engine.GetRenderer());
 
 		g_engine.GetRenderer().EndFrame();
 	}
+
+	g_engine.Shutdown();
+
 	return 0;
 }
 

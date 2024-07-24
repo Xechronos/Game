@@ -32,4 +32,16 @@ namespace GameData {
 		{ -5, 5 },
 		{ 5, 0 }
 	};
+
+	const std::vector<Vector2>PickupPoints{
+		{ 5, 0 },
+		{1,1},
+		{0,5},
+		{-1,1},
+		{-5,0},
+		{-1,-1},
+		{0,-5},
+		{1,-1},
+		{5,0}
+	};
 }

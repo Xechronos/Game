@@ -35,6 +35,7 @@ private:
 	float m_spawnTimer = 0;
 	float m_spawnTime = 0;
 	float m_stateTimer = 0;
+	float m_pickupTimer = 0;
 
 	Font* m_font{ nullptr };
 	Font* m_largeFont{ nullptr };
