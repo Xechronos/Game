@@ -10,32 +10,18 @@
 #include <iostream>
 #include <vector>
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	g_engine.Initialize();
-
-	MyGame* game = new MyGame(&g_engine);
-	game->Initialize();
-
-	while (!g_engine.isQuit())
-	{
+	
+	while (!g_engine.IsQuit()) {
 		g_engine.Update();
-		game->Update(g_engine.GetTime().GetDeltaTime());
-		g_engine.GetRenderer().SetColor(0, 0, 0, 0);
+		g_engine.GetRenderer().SetColor(random(255), random(255), random(255), 0);
 		g_engine.GetRenderer().BeginFrame();
-		Font* font = new Font();
-		font->Load("Begok.ttf", 20);
-		Text* text = new Text(font);
-
-		game->Draw(g_engine.GetRenderer());
-		text->Draw(g_engine.GetRenderer(), 40, 40);
 		g_engine.GetPS().Draw(g_engine.GetRenderer());
-
 		g_engine.GetRenderer().EndFrame();
 	}
 
 	g_engine.Shutdown();
-
 	return 0;
 }
 

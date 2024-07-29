@@ -1,5 +1,18 @@
 ﻿  Microsoft (R) C/C++ Optimizing Compiler Version 19.40.33811 for x64
   Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /IC:\Users\Austin\source\repos\GameEngine\ThirdParty\SDL2\include /IC:\Users\Austin\source\repos\GameEngine\Engine\Source /IC:\Users\Austin\source\repos\GameEngine\ThirdParty\fmod\core\inc /ZI /JMC /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"x64\Debug\\" /Fd"x64\Debug\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt Source\MyGame.cpp
+  cl /c /I"C:\Users\Austin\source\repos\GAT150-Game\ThirdParty\SDL2\include" /I"C:\Users\Austin\source\repos\GAT150-Game\Engine\Source" /I"C:\Users\Austin\source\repos\GAT150-Game\ThirdParty\fmod\core\inc" /ZI /JMC /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"x64\Debug\\" /Fd"x64\Debug\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt Source\Bullet.cpp Source\Enemy.cpp Source\GameData.cpp Source\Main.cpp Source\MyGame.cpp Source\Pickup.cpp Source\Player.cpp
+  Bullet.cpp
+C:\Users\Austin\source\repos\GameEngine\Game\Source\Bullet.h(2,10): error C1083: Cannot open include file: 'Actor.h': No such file or directory
+  Enemy.cpp
+C:\Users\Austin\source\repos\GameEngine\Game\Source\Enemy.h(2,10): error C1083: Cannot open include file: 'Actor.h': No such file or directory
+  GameData.cpp
+C:\Users\Austin\source\repos\GameEngine\Game\Source\GameData.h(2,9): error C1083: Cannot open include file: 'Vector2.h': No such file or directory
+  Main.cpp
+C:\Users\Austin\source\repos\GameEngine\Game\Source\Main.cpp(1,10): error C1083: Cannot open include file: 'Engine.h': No such file or directory
   MyGame.cpp
-  Game.vcxproj -> C:\Users\Austin\source\repos\GameEngine\x64\Debug\Game.exe
+C:\Users\Austin\source\repos\GameEngine\Game\Source\MyGame.h(2,10): error C1083: Cannot open include file: 'Game.h': No such file or directory
+  Pickup.cpp
+C:\Users\Austin\source\repos\GameEngine\Game\Source\Pickup.h(2,10): error C1083: Cannot open include file: 'Actor.h': No such file or directory
+  Player.cpp
+C:\Users\Austin\source\repos\GameEngine\Game\Source\Player.h(2,10): error C1083: Cannot open include file: 'Actor.h': No such file or directory
+  Generating Code...
