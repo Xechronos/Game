@@ -160,26 +160,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Bullet.cpp" />
-    <ClCompile Include="Source\Enemy.cpp" />
-    <ClCompile Include="Source\GameData.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\MyGame.cpp" />
-    <ClCompile Include="Source\Pickup.cpp" />
-    <ClCompile Include="Source\Player.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Engine\Engine.vcxproj">
-      <Project>{4058f594-4024-4524-9bcf-d37b07aa30f0}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Bullet.h" />
-    <ClInclude Include="Source\Enemy.h" />
-    <ClInclude Include="Source\GameData.h" />
-    <ClInclude Include="Source\MyGame.h" />
-    <ClInclude Include="Source\Pickup.h" />
-    <ClInclude Include="Source\Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
